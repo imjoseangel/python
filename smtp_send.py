@@ -1,12 +1,12 @@
 import smtplib
 import time
 #mynetworks = 168.100.189.0/28, 127.0.0.0/8
-From = "sugar@aquanima.com"
+From = "<from_address>"
 Login = From
-Password = "sugar"
-To = ["josea.munoz@gmail.com"]
+Password = "<your_password>"
+To = ["<destination_email>"]
 Date = time.ctime(time.time())
-Subject = "New message from Camille."
+Subject = "New message"
 Text = "Message Text"
 
 #Format mail message
@@ -14,7 +14,7 @@ mMessage = ('From: %s\nTo: %s\nDate: %s\nSubject: %s\n%s\n' %
             (From, To, Date, Subject, Text))
 
 print 'Connecting to Server'
-server = smtplib.SMTP('180.209.16.210', 465)
+server = smtplib.SMTP('<your_ip>', 465)
 server.set_debuglevel(1)
 server.ehlo()
 server.starttls()
