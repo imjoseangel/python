@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import telebot
-TOKEN = '120822365:AAGOoLYW8mqKboGKSEvZ5YUYOOxsgVuLlXM'
+TOKEN = '108270433:AAHGe0GZv4dqla-m4l07IgiNhhRBGsdkyWQ'
 bot = telebot.TeleBot(TOKEN)
 
 # Handle /start and /help
