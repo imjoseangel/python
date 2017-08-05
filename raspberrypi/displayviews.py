@@ -313,18 +313,18 @@ def handle_cancel(ch, evt):
 '''main'''
 if __name__ == '__main__':
     try:
-    while True:
-        timeDiff = time.time() - oldTime
-        # print "time diff: " + str(timeDiff)
- 
-        # update clock every minute
-        if timeDiff > 59 or timeDiff < 0.5:
-            oldTime = time.time()
-            alightDisplay(255, 255, 255)
-            updateClock()
-            time.sleep(1)
-        except KeyboardInterrupt:
-            print "exit"
-            clearDOT()
-            turnOffDOT()
-            sys.exit()
+        while True:
+            timeDiff = time.time() - oldTime
+            # print "time diff: " + str(timeDiff)
+    
+            # update clock every minute
+            if timeDiff > 59 or timeDiff < 0.5:
+                oldTime = time.time()
+                alightDisplay(255, 255, 255)
+                updateClock()
+                time.sleep(1)
+            except KeyboardInterrupt:
+                print "exit"
+                clearDOT()
+                turnOffDOT()
+                sys.exit()
