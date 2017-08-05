@@ -220,12 +220,12 @@ class AlightThread (threading.Thread):
     def run (self):
         colorDOT(self.red, self.green, self.blue)
         while True:
-        if turnedOff == False:
-            if time.time() - oldTime > 5:
-                print "stop AlightThread"
-                turnOffDOT()
-                self.do_run = False  # stop thread
-                break
+            if turnedOff == False:
+                if time.time() - oldTime > 5:
+                    print "stop AlightThread"
+                    turnOffDOT()
+                    self.do_run = False  # stop thread
+                    break
  
 at = AlightThread()
 def alightDisplay(r, g, b):
@@ -319,12 +319,12 @@ if __name__ == '__main__':
  
         # update clock every minute
         if timeDiff > 59 or timeDiff < 0.5:
-        oldTime = time.time()
-        alightDisplay(255, 255, 255)
-        updateClock()
-        time.sleep(1)
-    except KeyboardInterrupt:
-        print "exit"
-        clearDOT()
-        turnOffDOT()
-        sys.exit()
+            oldTime = time.time()
+            alightDisplay(255, 255, 255)
+            updateClock()
+            time.sleep(1)
+        except KeyboardInterrupt:
+            print "exit"
+            clearDOT()
+            turnOffDOT()
+            sys.exit()
