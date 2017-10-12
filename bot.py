@@ -24,11 +24,11 @@ from telegram.ext import CommandHandler
 from telegram.ext import Updater
 
 # Restrict Access
-LIST_OF_ADMINS = [423525222]
+LIST_OF_ADMINS = [XXX]
 
 # First, you have to create an Updater object. Replace 'TOKEN' with your Bot's API token.
 
-updater = Updater(token='473218049:AAH54a58sPKYKPtSC2_JfXWqIMMyAj8jvdg')
+updater = Updater(token='XXX')
 
 # For quicker access to the Dispatcher used by your Updater, you can introduce it locally:
 
