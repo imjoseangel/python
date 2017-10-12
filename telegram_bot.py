@@ -9,7 +9,7 @@ from functools import wraps
 from telegram.ext import CommandHandler
 
 # Restrict Access
-LIST_OF_ADMINS = [423525222]
+LIST_OF_ADMINS = [xxx]
 
 # First, you have to create an Updater object. Replace 'TOKEN' with your Bot's API token.
 
