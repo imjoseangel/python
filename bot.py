@@ -1,5 +1,19 @@
 #!/usr/bin/python
 
+# Systemd to load the script after booting the System
+'''
+[Unit]
+Description=imjoseangelbot Telegram Bot service
+After=multi-user.target
+
+[Service]
+Type=idle
+ExecStart=/usr/local/sbin/bot.py
+
+[Install]
+WantedBy=multi-user.target
+'''
+
 # Import Modules
 import os
 import time
