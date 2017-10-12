@@ -10,6 +10,7 @@ After=multi-user.target
 Type=idle
 User=pi
 ExecStart=/usr/local/sbin/bot.py
+WorkingDirectory=/usr/local/sbin
 
 [Install]
 WantedBy=multi-user.target
