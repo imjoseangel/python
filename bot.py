@@ -8,6 +8,7 @@ After=multi-user.target
 
 [Service]
 Type=idle
+User=pi
 ExecStart=/usr/local/sbin/bot.py
 
 [Install]
