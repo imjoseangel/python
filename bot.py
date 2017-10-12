@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/python
 
 # Import Modules
 import os
@@ -7,14 +7,14 @@ import sys
 import subprocess
 from functools import wraps
 from telegram.ext import CommandHandler
+from telegram.ext import Updater
 
 # Restrict Access
-LIST_OF_ADMINS = [xxx]
+LIST_OF_ADMINS = [423525222]
 
 # First, you have to create an Updater object. Replace 'TOKEN' with your Bot's API token.
 
-from telegram.ext import Updater
-updater = Updater(token='xxx')
+updater = Updater(token='473218049:AAH54a58sPKYKPtSC2_JfXWqIMMyAj8jvdg')
 
 # For quicker access to the Dispatcher used by your Updater, you can introduce it locally:
 
@@ -28,16 +28,14 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 # Now, you can define a function that should process a specific type of update:
 
 def start(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="Hey Jose, I'm your bot, please talk to me!")
+    bot.send_message(chat_id=update.message.chat_id, text="Hey *Jose*, I'm your bot, please talk to me!", parse_mode='MARKDOWN')
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
 
 def help(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="/help - Prints this Help\n/ip - Prints External IP\n/restart - Restarts Bot\n/run - Runs a Command\n/start - Hello Message\n/who - Who is connected")
+    bot.send_message(chat_id=update.message.chat_id, text="*List of Commands*\n/help - Prints this *Help*\n/ip - Prints *External IP*\n/restart - *Restarts* Bot\n/run - *Runs* a Command\n/start - *Hello* Message\n/who - *Who* is connected", parse_mode="MARKDOWN")
 start_handler = CommandHandler('help', help)
 dispatcher.add_handler(start_handler)
-
-
 
 # List of Functions
 
