@@ -1,36 +1,21 @@
 #!/usr/bin/python
 
-# Systemd to load the script after booting the System
-'''
-[Unit]
-Description=imjoseangelbot Telegram Bot service
-After=multi-user.target
-
-[Service]
-Type=idle
-User=pi
-ExecStart=/usr/local/sbin/bot.py
-WorkingDirectory=/usr/local/sbin
-
-[Install]
-WantedBy=multi-user.target
-'''
-
 # Import Modules
 import os
 import time
 import sys
 import subprocess
 from functools import wraps
-from telegram.ext import CommandHandler
-from telegram.ext import Updater
+import logging
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 # Restrict Access
-LIST_OF_ADMINS = [XXX]
+LIST_OF_ADMINS = [423525222]
 
 # First, you have to create an Updater object. Replace 'TOKEN' with your Bot's API token.
 
-updater = Updater(token='XXX')
+updater = Updater(token='473218049:AAHHafLq6XnvSJg43hIvJkdl_sl9AYTQHdE')
 
 # For quicker access to the Dispatcher used by your Updater, you can introduce it locally:
 
@@ -38,7 +23,6 @@ dispatcher = updater.dispatcher
 
 # This is a good time to set up the logging module, so you will know when (and why) things don't work as expected:
 
-import logging
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',level=logging.INFO)
 
 # Now, you can define a function that should process a specific type of update:
@@ -96,6 +80,34 @@ def ip(bot, update):
 
 dispatcher.add_handler(CommandHandler('ip', ip))
 
-# And that's all you need. To start the bot, run:
+def error(bot, update, error):
+    logging.warning('Update "%s" caused error "%s"' % (update, error))
+
+dispatcher.add_error_handler(error)
+
+
+# Lets improve this with a menu
+
+def menu(bot, update):
+    keyboard = [[InlineKeyboardButton("IP", callback_data='ip'),
+        InlineKeyboardButton("Who", callback_data='who')],
+        [InlineKeyboardButton("Help", callback_data='help')]]
+    reply_markup = InlineKeyboardMarkup(keyboard)
+    update.message.reply_text('Please choose:', reply_markup=reply_markup)
+
+dispatcher.add_handler(CommandHandler('menu', menu))
+
+def button(bot, update):
+    query = update.callback_query
+    bot.edit_message_text(text="Selected option: %s" % query.data,
+            chat_id=query.message.chat_id,
+            message_id=query.message.message_id)
+
+dispatcher.add_handler(CallbackQueryHandler(button))
+
+# Start the Bot
 updater.start_polling()
+
+# Run the bot until the user presses Ctrl-C or the process receives SIGINT,
+# SIGTERM or SIGABRT
 updater.idle()
