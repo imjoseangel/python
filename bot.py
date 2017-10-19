@@ -119,6 +119,7 @@ def menu(bot, update):
 dispatcher.add_handler(CommandHandler('menu', menu))
 
 
+@restricted
 def button(bot, update):
     query = update.callback_query
     if query.data == "ip":
