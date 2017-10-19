@@ -23,21 +23,30 @@ dispatcher = updater.dispatcher
 
 # This is a good time to set up the logging module, so you will know when (and why) things don't work as expected:
 
-logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',level=logging.INFO)
+logging.basicConfig(
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 # Now, you can define a function that should process a specific type of update:
 
+
 def start(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="Hey *Jose*, I'm your bot, please talk to me!", parse_mode='MARKDOWN')
+    bot.send_message(chat_id=update.message.chat_id,
+                     text="Hey *Jose*, I'm your bot, please talk to me!", parse_mode='MARKDOWN')
+
+
 start_handler = CommandHandler('start', start)
 dispatcher.add_handler(start_handler)
 
+
 def help(bot, update):
     bot.send_message(chat_id=update.message.chat_id, text="*List of Commands*\n/help - Prints this *Help*\n/ip - Prints *External IP*\n/restart - *Restarts* Bot\n/run - *Runs* a Command\n/start - *Hello* Message\n/who - *Who* is connected", parse_mode="MARKDOWN")
+
+
 start_handler = CommandHandler('help', help)
 dispatcher.add_handler(start_handler)
 
 # List of Functions
+
 
 def restricted(func):
     @wraps(func)
@@ -49,13 +58,16 @@ def restricted(func):
         return func(bot, update, *args, **kwargs)
     return wrapped
 
+
 @restricted
 def restart(bot, update):
     bot.send_message(update.message.chat_id, "Bot is restarting...")
     time.sleep(0.2)
     os.execl(sys.executable, sys.executable, *sys.argv)
 
+
 dispatcher.add_handler(CommandHandler('restart', restart))
+
 
 @restricted
 def who(bot, update):
@@ -63,14 +75,19 @@ def who(bot, update):
     details = subprocess.check_output(['w'])
     bot.send_message(update.message.chat_id, details)
 
+
 dispatcher.add_handler(CommandHandler('who', who))
+
 
 @restricted
 def run(bot, update, args):
     time.sleep(0.2)
     details = subprocess.check_output(args)
     bot.send_message(update.message.chat_id, details)
+
+
 dispatcher.add_handler(CommandHandler('run', run, pass_args=True))
+
 
 @restricted
 def ip(bot, update):
@@ -78,10 +95,13 @@ def ip(bot, update):
     details = subprocess.check_output(['/usr/bin/curl', 'ipinfo.io'])
     bot.send_message(update.message.chat_id, details)
 
+
 dispatcher.add_handler(CommandHandler('ip', ip))
+
 
 def error(bot, update, error):
     logging.warning('Update "%s" caused error "%s"' % (update, error))
+
 
 dispatcher.add_error_handler(error)
 
@@ -90,18 +110,24 @@ dispatcher.add_error_handler(error)
 
 def menu(bot, update):
     keyboard = [[InlineKeyboardButton("IP", callback_data='ip'),
-        InlineKeyboardButton("Who", callback_data='who')],
-        [InlineKeyboardButton("Help", callback_data='help')]]
+                 InlineKeyboardButton("Who", callback_data='who')],
+                [InlineKeyboardButton("Help", callback_data='help')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text('Please choose:', reply_markup=reply_markup)
 
+
 dispatcher.add_handler(CommandHandler('menu', menu))
+
 
 def button(bot, update):
     query = update.callback_query
-    bot.edit_message_text(text="Selected option: %s" % query.data,
-            chat_id=query.message.chat_id,
-            message_id=query.message.message_id)
+    if query.data == "ip":
+        time.sleep(0.2)
+        details = subprocess.check_output(['/usr/bin/curl', 'ipinfo.io'])
+        bot.edit_message_text(text="%s" % details,
+                              chat_id=query.message.chat_id,
+                              message_id=query.message.message_id)
+
 
 dispatcher.add_handler(CallbackQueryHandler(button))
 
