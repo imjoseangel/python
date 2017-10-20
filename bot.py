@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 
 # Import Modules
 import os
@@ -26,6 +26,8 @@ dispatcher = updater.dispatcher
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
+logger = logging.getLogger(__name__)
+
 # Now, you can define a function that should process a specific type of update:
 
 
@@ -43,13 +45,13 @@ def help(bot, update):
 
 
 '''
-/help - Prints this Help
-/ip - Prints External IP
-/menu - Shows inline Menu
-/restart - Restarts Bot
-/run - Runs a Command
-/start - Hello Message
-/who - Who is connected
+help - Prints this Help
+ip - Prints External IP
+menu - Shows inline Menu
+restart - Restarts Bot
+run - Runs a Command
+start - Hello Message
+who - Who is connected
 '''
 
 start_handler = CommandHandler('help', help)
@@ -110,7 +112,8 @@ dispatcher.add_handler(CommandHandler('ip', ip))
 
 
 def error(bot, update, error):
-    logging.warning('Update "%s" caused error "%s"' % (update, error))
+    """Log Errors caused by Updates."""
+    logger.warning('Update "%s" caused error "%s"', update, error)
 
 
 dispatcher.add_error_handler(error)
@@ -132,18 +135,12 @@ dispatcher.add_handler(CommandHandler('menu', menu))
 @restricted
 def button(bot, update):
     query = update.callback_query
-    if query.data == "ip":
-        time.sleep(0.2)
-        details = subprocess.check_output(['/usr/bin/curl', 'ipinfo.io'])
-        bot.edit_message_text(text="%s" % details,
-                              chat_id=query.message.chat_id,
-                              message_id=query.message.message_id)
-    elif query.data == "who":
-        time.sleep(0.2)
-        details = subprocess.check_output(['w'])
-        bot.edit_message_text(text="%s" % details,
-                              chat_id=query.message.chat_id,
-                              message_id=query.message.message_id)
+    time.sleep(0.2)
+    details = subprocess.check_output(['/usr/local/sbin/run.sh', query.data])
+    bot.edit_message_text(text="%s" % details,
+                          chat_id=query.message.chat_id,
+                          message_id=query.message.message_id,
+                          parse_mode="MARKDOWN")
 
 
 dispatcher.add_handler(CallbackQueryHandler(button))
