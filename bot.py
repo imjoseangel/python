@@ -11,11 +11,11 @@ from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
 
 # Restrict Access
-LIST_OF_ADMINS = [423525222]
+LIST_OF_ADMINS = [XXX]
 
 # First, you have to create an Updater object. Replace 'TOKEN' with your Bot's API token.
 
-updater = Updater(token='473218049:AAHHafLq6XnvSJg43hIvJkdl_sl9AYTQHdE')
+updater = Updater(token='XXX')
 
 # For quicker access to the Dispatcher used by your Updater, you can introduce it locally:
 
