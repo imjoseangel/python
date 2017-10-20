@@ -39,8 +39,18 @@ dispatcher.add_handler(start_handler)
 
 
 def help(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="*List of Commands*\n/help - Prints this *Help*\n/ip - Prints *External IP*\n/restart - *Restarts* Bot\n/run - *Runs* a Command\n/start - *Hello* Message\n/who - *Who* is connected", parse_mode="MARKDOWN")
+    bot.send_message(chat_id=update.message.chat_id, text="*List of Commands*\n/help - Prints this *Help*\n/ip - Prints *External IP*\n/menu - Shows inline *Menu*\n/restart - *Restarts* Bot\n/run - *Runs* a Command\n/start - *Hello* Message\n/who - *Who* is connected", parse_mode="MARKDOWN")
 
+
+'''
+/help - Prints this Help
+/ip - Prints External IP
+/menu - Shows inline Menu
+/restart - Restarts Bot
+/run - Runs a Command
+/start - Hello Message
+/who - Who is connected
+'''
 
 start_handler = CommandHandler('help', help)
 dispatcher.add_handler(start_handler)
@@ -125,6 +135,12 @@ def button(bot, update):
     if query.data == "ip":
         time.sleep(0.2)
         details = subprocess.check_output(['/usr/bin/curl', 'ipinfo.io'])
+        bot.edit_message_text(text="%s" % details,
+                              chat_id=query.message.chat_id,
+                              message_id=query.message.message_id)
+    elif query.data == "who":
+        time.sleep(0.2)
+        details = subprocess.check_output(['w'])
         bot.edit_message_text(text="%s" % details,
                               chat_id=query.message.chat_id,
                               message_id=query.message.message_id)
