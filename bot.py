@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 
 # Import Modules
 import os
@@ -6,9 +7,12 @@ import time
 import sys
 import subprocess
 from functools import wraps
+from uuid import uuid4
 import logging
-from telegram import InlineKeyboardButton, InlineKeyboardMarkup
-from telegram.ext import Updater, CommandHandler, CallbackQueryHandler
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, \
+    InlineQueryResultArticle, InputTextMessageContent
+from telegram.ext import Updater, CommandHandler, CallbackQueryHandler, InlineQueryHandler
+
 
 # Restrict Access
 LIST_OF_ADMINS = [XXX]
@@ -21,7 +25,8 @@ updater = Updater(token='XXX')
 
 dispatcher = updater.dispatcher
 
-# This is a good time to set up the logging module, so you will know when (and why) things don't work as expected:
+# This is a good time to set up the logging module, so you will know when (and why)
+# things don't work as expected:
 
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
@@ -33,7 +38,7 @@ logger = logging.getLogger(__name__)
 
 def start(bot, update):
     bot.send_message(chat_id=update.message.chat_id,
-                     text="Hey *Jose*, I'm your bot, please talk to me!", parse_mode='MARKDOWN')
+                     text="Hey *User*, I'm Kensho 見性. You can talk to me.", parse_mode='MARKDOWN')
 
 
 start_handler = CommandHandler('start', start)
@@ -41,7 +46,10 @@ dispatcher.add_handler(start_handler)
 
 
 def help(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="*List of Commands*\n/help - Prints this *Help*\n/ip - Prints *External IP*\n/menu - Shows inline *Menu*\n/restart - *Restarts* Bot\n/run - *Runs* a Command\n/start - *Hello* Message\n/who - *Who* is connected", parse_mode="MARKDOWN")
+    bot.send_message(chat_id=update.message.chat_id, text="*List of Commands*\n/help \
+    - Prints this *Help*\n/ip - Prints *External IP*\n/menu - Shows inline *Menu*\n/restart \
+    - *Restarts* Bot\n/run - *Runs* a Command\n/start - *Hello* Message\n/who \
+    - *Who* is connected", parse_mode="MARKDOWN")
 
 
 '''
@@ -124,6 +132,8 @@ dispatcher.add_error_handler(error)
 def menu(bot, update):
     keyboard = [[InlineKeyboardButton("IP", callback_data='ip'),
                  InlineKeyboardButton("Who", callback_data='who')],
+                [InlineKeyboardButton(
+                    "Run", switch_inline_query_current_chat='')],
                 [InlineKeyboardButton("Help", callback_data='help')]]
     reply_markup = InlineKeyboardMarkup(keyboard)
     update.message.reply_text('Please choose:', reply_markup=reply_markup)
@@ -144,6 +154,34 @@ def button(bot, update):
 
 
 dispatcher.add_handler(CallbackQueryHandler(button))
+
+
+@restricted
+def inlinequery(bot, update):
+    """Handle the inline query."""
+    query = update.inline_query.query
+    time.sleep(0.2)
+
+    try:
+        details = subprocess.check_output(query, shell=True)
+        returncode = 0
+    except subprocess.CalledProcessError as e:
+        details = e.output
+        returncode = e.returncode
+    print (returncode)
+
+    results = [
+        InlineQueryResultArticle(
+            id=uuid4(),
+            title="Run",
+            description="Runs a shell command on inline mode",
+            input_message_content=InputTextMessageContent(details,
+                                                          parse_mode="MARKDOWN"))]
+
+    update.inline_query.answer(results)
+
+
+dispatcher.add_handler(InlineQueryHandler(inlinequery))
 
 # Start the Bot
 updater.start_polling()
