@@ -37,8 +37,7 @@ logger = logging.getLogger(__name__)
 
 
 def start(bot, update):
-    bot.send_message(chat_id=update.message.chat_id,
-                     text="Hey *User*, I'm Kensho 見性. You can talk to me.", parse_mode='MARKDOWN')
+    bot.send_message(chat_id=update.message.chat_id, text="I can help you manage your *Raspberry Pi*. Code is available at https://git.io/vd67s\n\nYou can control me by sending these commands:\n\n*List of Commands*\n/help - Prints this *Help*\n/ip - Prints *External IP*\n/menu - Shows inline *Menu*\n/restart - *Restarts* Bot\n/run - *Runs* a shell Command\n/who - *Who* is connected", parse_mode="MARKDOWN")
 
 
 start_handler = CommandHandler('start', start)
@@ -46,19 +45,16 @@ dispatcher.add_handler(start_handler)
 
 
 def help(bot, update):
-    bot.send_message(chat_id=update.message.chat_id, text="*List of Commands*\n/help \
-    - Prints this *Help*\n/ip - Prints *External IP*\n/menu - Shows inline *Menu*\n/restart \
-    - *Restarts* Bot\n/run - *Runs* a Command\n/start - *Hello* Message\n/who \
-    - *Who* is connected", parse_mode="MARKDOWN")
+    bot.send_message(chat_id=update.message.chat_id, text="I can help you manage your *Raspberry Pi*. Code is available at https://git.io/vd67s\n\nYou can control me by sending these commands:\n\n*List of Commands*\n/help - Prints this *Help*\n/ip - Prints *External IP*\n/menu - Shows inline *Menu*\n/restart - *Restarts* Bot\n/run - *Runs* a shell Command\n/who - *Who* is connected", parse_mode="MARKDOWN")
 
 
 '''
+start - Starts Kenshō
 help - Prints this Help
 ip - Prints External IP
 menu - Shows inline Menu
 restart - Restarts Bot
-run - Runs a Command
-start - Hello Message
+run - Runs a shell Command
 who - Who is connected
 '''
 
@@ -101,9 +97,21 @@ dispatcher.add_handler(CommandHandler('who', who))
 
 @restricted
 def run(bot, update, args):
-    time.sleep(0.2)
-    details = subprocess.check_output(args)
+
+    cmd = args[0].encode('utf8')
+    counter = 1
+
+    argsno = args.__len__()
+
+    while counter < argsno:
+        addcmd = ' ' + args[counter].encode('utf8')
+        cmd = cmd + addcmd
+        counter += 1
+
+    details = subprocess.check_output(
+        ['/usr/local/sbin/run.sh', 'bash', "%s" % cmd])
     bot.send_message(update.message.chat_id, details)
+    print details
 
 
 dispatcher.add_handler(CommandHandler('run', run, pass_args=True))
